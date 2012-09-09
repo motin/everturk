@@ -8,7 +8,15 @@ class User extends BaseUser
 {
 
 	// Array that holds meta-information about the structure of notebooks and stacks that Everturk utilizes
-	public $structure = null;
+	public $structure = array(
+		'notebooks' => array(
+			'input' => array(),
+			'pending' => array(),
+			'result' => array(),
+		),
+		'template_notebook' => null,
+		'templates' => array(),
+	);
 
 	// Add your model-specific methods here. This file will not be overriden by gtc except you force it.
 	public static function model($className = __CLASS__)
@@ -84,6 +92,38 @@ class User extends BaseUser
 			$existingNotebooks = listNotebooks();
 		}
 
+		// Create template notebook if not exists
+		$name = 'Everturk Task Templates';
+		$stack = '';
+		$exists = false;
+		$notebook = null;
+		foreach ($existingNotebooks as $en)
+		{
+			if ($en->name == $name && $en->stack == $stack)
+			{
+				$exists = true;
+				$notebook = $en;
+				break;
+			}
+		}
+		if (!$exists)
+		{
+			$notebook = createNotebookByNameAndStack($name, $stack);
+		}
+
+		$this->structure['template_notebook'] = $notebook;
+		
+		// Create template notes if they do not exist
+		$notes = findNotesByNotebookGuidOrderedByCreated($notebook->guid, $offset=0, $maxNotes=100);
+		var_dump(__LINE__, $notes);
+		
+		//
+		// Refresh list of existing notebooks
+		// TODO
+		//
+		// Create input and result notebooks based on the templates
+		// TODO
+		//
 		// Hard-coded template
 		$templates = array(
 			'Do as I say',
