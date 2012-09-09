@@ -39,7 +39,7 @@ return array(
 		'urlManager' => array(
 			'urlFormat' => 'path',
 			'rules' => array(
-				'/' => 'site/index'
+				'/' => 'site/index',
 			/*
 			  '<controller:\w+>/<id:\d+>'=>'<controller>/view',
 			  '<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
