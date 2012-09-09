@@ -51,18 +51,13 @@ return array(
 			'showScriptName' => false
 		),
 		'db' => array(
-			'connectionString' => 'sqlite:' . dirname(__FILE__) . '/../data/testdrive.db',
+			'connectionString' => 'mysql:host=' . YII_DB_HOST . (defined('YII_DB_PORT') ? ';port=' . YII_DB_HOST : '') . ';dbname=' . YII_DB_NAME,
+			'emulatePrepare' => true,
+			'username' => YII_DB_USER,
+			'password' => YII_DB_PASSWORD,
+			'charset' => 'utf8',
+		//'schemaCachingDuration'=>3600*24,
 		),
-		// uncomment the following to use a MySQL database
-		/*
-		  'db'=>array(
-		  'connectionString' => 'mysql:host=localhost;dbname=testdrive',
-		  'emulatePrepare' => true,
-		  'username' => 'root',
-		  'password' => '',
-		  'charset' => 'utf8',
-		  ),
-		 */
 		'errorHandler' => array(
 			// use 'site/error' action to display errors
 			'errorAction' => 'site/error',
