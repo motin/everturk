@@ -62,7 +62,17 @@ class EvernoteNotificationController extends Controller
 		{
 			throw new CHttpException(401);
 		}
-		echo "OK";
+
+		$toSave = new EvernoteNotification;
+		$toSave->user_id = User::model()->findOrCreateByPk($userId);
+		$toSave->guid = $guid;
+		$toSave->reason = $reason;
+		$toSave->created = date("Y-m-d H:i:s", time());
+
+		if (!$toSave->save())
+			throw new SaveException($toSave);
+
+		echo "SAVED";
 		var_dump(compact("userId", "guid", "reason"));
 	}
 
