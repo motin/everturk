@@ -48,7 +48,7 @@ class User extends BaseUser
 			if (!$user->save())
 				throw new SaveException($user);
 		}
-		return $user->id;
+		return $user;
 	}
 
 }

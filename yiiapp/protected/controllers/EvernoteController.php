@@ -34,6 +34,8 @@ class EvernoteController extends Controller
 						// If we have a proper authentication, we store it
 						if ($return)
 						{
+							$user = User::model()->findOrCreateByPk($_SESSION['userId']);
+
 							$toSave = new EvernoteAuthorization;
 							$toSave->requestToken = $_SESSION['requestToken'];
 							$toSave->requestTokenSecret = $_SESSION['requestTokenSecret'];
@@ -42,7 +44,7 @@ class EvernoteController extends Controller
 							$toSave->noteStoreUrl = $_SESSION['noteStoreUrl'];
 							$toSave->webApiUrlPrefix = $_SESSION['webApiUrlPrefix'];
 							$toSave->tokenExpires = $_SESSION['tokenExpires'];
-							$toSave->user_id = User::model()->findOrCreateByPk($_SESSION['userId']);
+							$toSave->user_id = $user->id;
 							$toSave->created = date("Y-m-d H:i:s", time());
 
 							if (!$toSave->save())
