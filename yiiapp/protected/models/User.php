@@ -37,4 +37,18 @@ class User extends BaseUser
 		);
 	}
 
+	public function findOrCreateByPk($id)
+	{
+		$user = $this->findByPk($id);
+		if (empty($user))
+		{
+			$user = new User;
+			$user->id = $id;
+			$user->created = date("Y-m-d H:i:s", time());
+			if (!$user->save())
+				throw new SaveException($user);
+		}
+		return $user->id;
+	}
+
 }
