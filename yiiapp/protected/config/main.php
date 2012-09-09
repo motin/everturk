@@ -40,6 +40,8 @@ return array(
 			'urlFormat' => 'path',
 			'rules' => array(
 				'/' => 'site/index',
+				// Hackingly support plural forms of controller in urls
+				'<controller:\w+>s/<action:\w+>' => '<controller>/<action>',
 			/*
 			  '<controller:\w+>/<id:\d+>'=>'<controller>/view',
 			  '<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
