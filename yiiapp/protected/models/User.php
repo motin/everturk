@@ -134,4 +134,14 @@ class User extends BaseUser
 		$this->structure = array(1, 2, 4, 5, 6, 7, 8);
 	}
 
+	public function submitNotes()
+	{
+
+		$structure = $this->getStructure();
+
+		var_dump(__LINE__, $structure);
+
+		// List notes
+	}
+
 }

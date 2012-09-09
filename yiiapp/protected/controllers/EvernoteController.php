@@ -53,6 +53,9 @@ class EvernoteController extends Controller
 
 						// Create initial notebooks and stacks that the service expects
 						$user->updateStructure($return);
+
+						// Submit notes (not yet submitted)
+						$user->submitNotes();
 					} else
 					{
 						//var_dump(__LINE__);
