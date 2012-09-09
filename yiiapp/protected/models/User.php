@@ -182,7 +182,7 @@ class User extends BaseUser
 		}
 	}
 
-	public function submitNote($notebook, $input_note)
+	public function submitNote($notebook, $input_note, $k)
 	{
 
 		$structure = $this->getStructure();
@@ -406,6 +406,10 @@ class User extends BaseUser
 			// Move note from input to pending notebook
 			$toNotebookGuid = $structure['notebooks']['pending'][$k]->guid;
 			$result = moveNote($input_note, $toNotebookGuid);
+
+			if (!$result) {
+				throw new Exception("Warning, note was not moved and will probably be submitted again as a HIT");
+			}
 			//var_dump(__LINE__, $result);
 		} else
 		{
@@ -426,7 +430,7 @@ class User extends BaseUser
 
 			foreach ($notes->notes as $input_note)
 			{
-				$this->submitNote($notebook, $input_note);
+				$this->submitNote($notebook, $input_note, $k);
 			}
 		}
 	}
