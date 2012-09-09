@@ -221,7 +221,6 @@ class User extends BaseUser
 				// {note-title}
 				// {note-audio-length-seconds}
 				// {node-wordcount}
-				// {node-publicurl}
 
 				$template_note_full = getNote($template_note->guid, $withContent = true);
 				var_dump(__LINE__, $template_note, $template_note_full);
@@ -237,6 +236,9 @@ class User extends BaseUser
 				// 
 				// Replace variables in HIT content
 				// TODO
+				// If link to url:
+				$sharedNoteUrl = getSharedNoteUrl($input_note->guid);
+				var_dump(__LINE__, $sharedNoteUrl);
 
 				continue;
 
@@ -246,14 +248,12 @@ class User extends BaseUser
 				// Create HIT
 				$title = $template_note->title;
 
-				$publicUrl = 'http://google.com';
-
 				// Prepare Question
 				$Question = '
 					<QuestionForm xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd">
 						<Overview>
 							<Title>Important:</Title>
-							<Text>Any texts or other media referred to in the task (if any) is available here: ' . $publicUrl . '</Text>
+							<Text>Any texts or other media referred to in the task (if any) is available here: ' . $sharedNoteUrl . '</Text>
 						</Overview>
 						<Question>
 							<QuestionIdentifier>1</QuestionIdentifier>
