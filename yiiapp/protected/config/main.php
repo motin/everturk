@@ -1,5 +1,8 @@
 <?php
 
+// Always use UTC
+date_default_timezone_set('UTC');
+
 require('secrets.php');
 
 // uncomment the following to define a path alias
