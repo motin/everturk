@@ -193,21 +193,91 @@ class User extends BaseUser
 		{
 			$notes = findNotesByNotebookGuidOrderedByCreated($notebook->guid, $offset = 0, $maxNotes = 100);
 
-			foreach ($notes->notes as $note)
+			foreach ($notes->notes as $input_note)
 			{
-				var_dump(__LINE__, $note);
+				//var_dump(__LINE__, $note);
+				//
+				// Find the template note - matching simply by name atm
+				$template_note = null;
+				foreach ($structure['templates'] as $template)
+				{
+					if ($template->title == $notebook->name)
+					{
+						$template_note = $template;
+						break;
+					}
+					//var_dump(__LINE__, $t->title, $notebook->name);
+				}
 
+				if (empty($template_note))
+				{
+					throw new Exception("The template note for the input note was not found");
+				}
+
+				$input_note_full = getNote($input_note->guid, $withContent = true);
+				var_dump(__LINE__, $input_note, $input_note_full);
+
+				// Extract note variables
+				// {note-title}
+				// {note-audio-length-seconds}
+				// {node-wordcount}
+				// {node-publicurl}
+
+				$template_note_full = getNote($template_note->guid, $withContent = true);
+				var_dump(__LINE__, $template_note, $template_note_full);
+
+				// Replace variables in template content
+				// TODO
+				// 
+				// Extract default values
+				// TODO
+				// AssignmentDurationInSeconds
+				// LifetimeInSeconds
+				// Reward
+				// 
+				// Replace variables in HIT content
+				// TODO
+
+				continue;
+
+				// Extract overrides
+				// TODO later
+				// 
 				// Create HIT
-				$q = $note->title;
+				$title = $template_note->title;
 
-				// prepare ExternalQuestion
-				$Question = ' <QuestionForm xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd"><Overview><Title></Title><Text>Please anwser the followingtask:</Text></Overview><Question><QuestionIdentifier>1</QuestionIdentifier><DisplayName></DisplayName><IsRequired>true</IsRequired><QuestionContent><Text>' . $q . '</Text></QuestionContent><AnswerSpecification><FreeTextAnswer><Constraints><Length minLength="2" maxLength="20000" /></Constraints><DefaultText></DefaultText></FreeTextAnswer></AnswerSpecification></Question></QuestionForm>';
+				$publicUrl = 'http://google.com';
 
-				// prepare Request
+				// Prepare Question
+				$Question = '
+					<QuestionForm xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd">
+						<Overview>
+							<Title>Important:</Title>
+							<Text>Any texts or other media referred to in the task (if any) is available here: ' . $publicUrl . '</Text>
+						</Overview>
+						<Question>
+							<QuestionIdentifier>1</QuestionIdentifier>
+							<DisplayName>Your task:</DisplayName>
+							<IsRequired>true</IsRequired>
+							<QuestionContent>
+								<Text>' . $title . '</Text>
+							</QuestionContent>
+							<AnswerSpecification>
+								<FreeTextAnswer>
+									<Constraints>
+										<Length minLength="2" maxLength="20000" />
+									</Constraints>
+									<DefaultText></DefaultText>
+								</FreeTextAnswer>
+							</AnswerSpecification>
+						</Question>
+					</QuestionForm>';
+
+				// Prepare Request
 				$Request = array(
-					"Title" => $q,
-					"Description" => "Bar",
-					"Question" => $Question,
+					"Title" => $title,
+					"Description" => $title,
+					"Question" => str_replace(array("\n", "\t", "\r"), "", $Question),
 					"Reward" => array("Amount" => "0.01", "CurrencyCode" => "USD"),
 					"AssignmentDurationInSeconds" => "30",
 					"LifetimeInSeconds" => "30"
