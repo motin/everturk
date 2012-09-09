@@ -16,6 +16,7 @@ return array(
 		'application.models.*',
 		'application.components.*',
 		'application.exceptions.*',
+		'ext.gtc.components.*'
 	),
 	'modules' => array(
 		// uncomment the following to enable the Gii tool
