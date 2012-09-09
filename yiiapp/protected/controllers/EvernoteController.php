@@ -95,12 +95,17 @@ class EvernoteController extends Controller
 			'Translate this into german',
 		);
 
+		$pending_notebooks = array();
+		foreach ($templates as $template)
+			$pending_notebooks[] = $template . " (Pending)";
+
 		$result_notebooks = array();
 		foreach ($templates as $template)
 			$result_notebooks[] = $template . " (Results)";
 
 		$notebookStructure = array(
 			'Everturk Input' => $templates,
+			'Everturk Pending' => $pending_notebooks,
 			'Everturk Results' => $result_notebooks,
 		);
 
