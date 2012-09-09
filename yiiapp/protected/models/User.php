@@ -186,10 +186,52 @@ class User extends BaseUser
 	{
 
 		$structure = $this->getStructure();
+		//var_dump(__LINE__, $structure);
+		//
+		// List notes in input notebooks
+		foreach ($structure['notebooks']['input'] as $k => $notebook)
+		{
+			$notes = findNotesByNotebookGuidOrderedByCreated($notebook->guid, $offset = 0, $maxNotes = 100);
 
-		var_dump(__LINE__, $structure);
+			foreach ($notes->notes as $note)
+			{
+				var_dump(__LINE__, $note);
 
-		// List notes
+				// Create HIT
+				$q = $note->title;
+
+				// prepare ExternalQuestion
+				$Question = ' <QuestionForm xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd"><Overview><Title></Title><Text>Please anwser the followingtask:</Text></Overview><Question><QuestionIdentifier>1</QuestionIdentifier><DisplayName></DisplayName><IsRequired>true</IsRequired><QuestionContent><Text>' . $q . '</Text></QuestionContent><AnswerSpecification><FreeTextAnswer><Constraints><Length minLength="2" maxLength="20000" /></Constraints><DefaultText></DefaultText></FreeTextAnswer></AnswerSpecification></Question></QuestionForm>';
+
+				// prepare Request
+				$Request = array(
+					"Title" => $q,
+					"Description" => "Bar",
+					"Question" => $Question,
+					"Reward" => array("Amount" => "0.01", "CurrencyCode" => "USD"),
+					"AssignmentDurationInSeconds" => "30",
+					"LifetimeInSeconds" => "30"
+				);
+
+				// Submit HIT
+				Yii::import('ext.turk50.Turk50');
+				$mturk = new Turk50(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, array("sandbox" => FALSE));
+				$CreateHITResponse = $mturk->CreateHIT($Request);
+
+				//var_dump(__LINE__, $Request, $CreateHITResponse, $CreateHITResponse->HIT->Request);
+
+				if ($CreateHITResponse->HIT->Request->IsValid == 'True')
+				{
+					// Move note from input to pending notebook
+					$toNotebookGuid = $structure['notebooks']['pending'][$k]->guid;
+					$result = moveNote($note, $toNotebookGuid);
+					//var_dump(__LINE__, $result);
+				} else
+				{
+					//var_dump(__LINE__, $CreateHITResponse->HIT->Request);
+				}
+			}
+		}
 	}
 
 }
