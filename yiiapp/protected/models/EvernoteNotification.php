@@ -1,10 +1,10 @@
 <?php
 
 // auto-loading fix
-Yii::setPathOfAlias('EvernoteNotifications', dirname(__FILE__));
-Yii::import('EvernoteNotifications.*');
+Yii::setPathOfAlias('EvernoteNotification', dirname(__FILE__));
+Yii::import('EvernoteNotification.*');
 
-class EvernoteNotifications extends BaseEvernoteNotifications
+class EvernoteNotification extends BaseEvernoteNotification
 {
 
 	// Add your model-specific methods here. This file will not be overriden by gtc except you force it.
@@ -20,12 +20,16 @@ class EvernoteNotifications extends BaseEvernoteNotifications
 
 	public function __toString()
 	{
-		return (string) $this->userId;
+		return (string) $this->guid;
 	}
 
 	public function behaviors()
 	{
 		return array_merge(parent::behaviors(), array(
+			    'OwnerBehavior' => array(
+				    'class' => 'OwnerBehavior',
+				    'ownerColumn' => 'user_id',
+			    ),
 		    ));
 	}
 

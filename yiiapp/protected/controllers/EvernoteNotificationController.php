@@ -1,6 +1,6 @@
 <?php
 
-class EvernoteNotificationsController extends Controller
+class EvernoteNotificationController extends Controller
 {
 
 	public $layout = '//layouts/column2';
@@ -63,7 +63,7 @@ class EvernoteNotificationsController extends Controller
 			throw new CHttpException(401);
 		}
 		echo "OK";
-		var_dump(compact("userId","guid","reason"));
+		var_dump(compact("userId", "guid", "reason"));
 	}
 
 	public function actionView($id)

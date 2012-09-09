@@ -1,17 +1,18 @@
 <?php
 
 /**
- * This is the model base class for the table "evernote_notifications".
+ * This is the model base class for the table "evernote_notification".
  *
- * Columns in table "evernote_notifications" available as properties of the model:
+ * Columns in table "evernote_notification" available as properties of the model:
  * @property string $id
- * @property string $userId
  * @property string $guid
  * @property string $reason
+ * @property string $user_id
  *
- * There are no model relations.
+ * Relations of table "evernote_notification" available as properties of the model:
+ * @property User $user
  */
-abstract class BaseEvernoteNotifications extends CActiveRecord
+abstract class BaseEvernoteNotification extends CActiveRecord
 {
 
 	public static function model($className = __CLASS__)
@@ -21,24 +22,24 @@ abstract class BaseEvernoteNotifications extends CActiveRecord
 
 	public function tableName()
 	{
-		return 'evernote_notifications';
+		return 'evernote_notification';
 	}
 
 	public function rules()
 	{
 		return array(
-			array('userId', 'unique'),
-			array('userId', 'identificationColumnValidator'),
-			array('userId, guid, reason', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('userId', 'length', 'max' => 20),
+			array('guid', 'unique'),
+			array('guid', 'identificationColumnValidator'),
+			array('guid, reason', 'default', 'setOnEmpty' => true, 'value' => null),
 			array('guid, reason', 'length', 'max' => 45),
-			array('id, userId, guid, reason', 'safe', 'on' => 'search'),
+			array('id, guid, reason, user_id', 'safe', 'on' => 'search'),
 		);
 	}
 
 	public function relations()
 	{
 		return array(
+			'user' => array(self::BELONGS_TO, 'User', 'user_id'),
 		);
 	}
 
@@ -46,9 +47,9 @@ abstract class BaseEvernoteNotifications extends CActiveRecord
 	{
 		return array(
 			'id' => Yii::t('app', 'ID'),
-			'userId' => Yii::t('app', 'User'),
 			'guid' => Yii::t('app', 'Guid'),
 			'reason' => Yii::t('app', 'Reason'),
+			'user_id' => Yii::t('app', 'User'),
 		);
 	}
 
@@ -57,9 +58,9 @@ abstract class BaseEvernoteNotifications extends CActiveRecord
 		$criteria = new CDbCriteria;
 
 		$criteria->compare('t.id', $this->id, true);
-		$criteria->compare('t.userId', $this->userId, true);
 		$criteria->compare('t.guid', $this->guid, true);
 		$criteria->compare('t.reason', $this->reason, true);
+		$criteria->compare('t.user_id', $this->user_id);
 
 		return new CActiveDataProvider(get_class($this), array(
 			    'criteria' => $criteria,
@@ -69,6 +70,7 @@ abstract class BaseEvernoteNotifications extends CActiveRecord
 	public function get_label()
 	{
 		return '#' . $this->id;
+		return '#' . $this->user_id;
 	}
 
 }
