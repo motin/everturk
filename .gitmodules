@@ -1,3 +1,9 @@
 [submodule "yii"]
 	path = yii
 	url = https://github.com/yiisoft/yii.git
+[submodule "yiiapp/protected/extensions/PHP-Mechanical-Turk"]
+	path = yiiapp/protected/extensions/PHP-Mechanical-Turk
+	url = https://github.com/jackbot/PHP-Mechanical-Turk.git
+[submodule "yiiapp/protected/extensions/evernote-sdk-php"]
+	path = yiiapp/protected/extensions/evernote-sdk-php
+	url = https://github.com/evernote/evernote-sdk-php.git
