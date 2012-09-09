@@ -26,10 +26,10 @@ class EvernoteAuthorization extends BaseEvernoteAuthorization
 	public function behaviors()
 	{
 		return array_merge(parent::behaviors(), array(
-			    'OwnerBehavior' => array(
-				    'class' => 'OwnerBehavior',
-				    'ownerColumn' => 'user_id',
-			    ),
+			/* 'OwnerBehavior' => array(
+			  'class' => 'OwnerBehavior',
+			  'ownerColumn' => 'user_id',
+			  ), */
 		    ));
 	}
 
