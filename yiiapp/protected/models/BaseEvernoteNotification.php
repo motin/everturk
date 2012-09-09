@@ -8,6 +8,7 @@
  * @property string $guid
  * @property string $reason
  * @property string $user_id
+ * @property string $created
  *
  * Relations of table "evernote_notification" available as properties of the model:
  * @property User $user
@@ -28,11 +29,12 @@ abstract class BaseEvernoteNotification extends CActiveRecord
 	public function rules()
 	{
 		return array(
-			array('guid', 'unique'),
-			array('guid', 'identificationColumnValidator'),
-			array('guid, reason', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('user_id', 'required'),
+			array('guid, reason, created', 'default', 'setOnEmpty' => true, 'value' => null),
 			array('guid, reason', 'length', 'max' => 45),
-			array('id, guid, reason, user_id', 'safe', 'on' => 'search'),
+			array('user_id', 'length', 'max' => 20),
+			array('created', 'safe'),
+			array('id, guid, reason, user_id, created', 'safe', 'on' => 'search'),
 		);
 	}
 
@@ -50,6 +52,7 @@ abstract class BaseEvernoteNotification extends CActiveRecord
 			'guid' => Yii::t('app', 'Guid'),
 			'reason' => Yii::t('app', 'Reason'),
 			'user_id' => Yii::t('app', 'User'),
+			'created' => Yii::t('app', 'Created'),
 		);
 	}
 
@@ -61,6 +64,7 @@ abstract class BaseEvernoteNotification extends CActiveRecord
 		$criteria->compare('t.guid', $this->guid, true);
 		$criteria->compare('t.reason', $this->reason, true);
 		$criteria->compare('t.user_id', $this->user_id);
+		$criteria->compare('t.created', $this->created, true);
 
 		return new CActiveDataProvider(get_class($this), array(
 			    'criteria' => $criteria,
@@ -70,7 +74,6 @@ abstract class BaseEvernoteNotification extends CActiveRecord
 	public function get_label()
 	{
 		return '#' . $this->id;
-		return '#' . $this->user_id;
 	}
 
 }

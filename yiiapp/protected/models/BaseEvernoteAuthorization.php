@@ -13,6 +13,7 @@
  * @property string $webApiUrlPrefix
  * @property string $tokenExpires
  * @property string $user_id
+ * @property string $created
  *
  * Relations of table "evernote_authorization" available as properties of the model:
  * @property User $user
@@ -33,13 +34,13 @@ abstract class BaseEvernoteAuthorization extends CActiveRecord
 	public function rules()
 	{
 		return array(
-			array('requestToken', 'unique'),
-			array('requestToken', 'identificationColumnValidator'),
-			array('requestToken, requestTokenSecret, oauthVerifier, accessToken, noteStoreUrl, webApiUrlPrefix, tokenExpires', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('user_id', 'required'),
+			array('requestToken, requestTokenSecret, oauthVerifier, accessToken, noteStoreUrl, webApiUrlPrefix, tokenExpires, created', 'default', 'setOnEmpty' => true, 'value' => null),
 			array('requestToken, accessToken, noteStoreUrl, webApiUrlPrefix', 'length', 'max' => 255),
 			array('requestTokenSecret, oauthVerifier', 'length', 'max' => 45),
-			array('tokenExpires', 'length', 'max' => 20),
-			array('id, requestToken, requestTokenSecret, oauthVerifier, accessToken, noteStoreUrl, webApiUrlPrefix, tokenExpires, user_id', 'safe', 'on' => 'search'),
+			array('tokenExpires, user_id', 'length', 'max' => 20),
+			array('created', 'safe'),
+			array('id, requestToken, requestTokenSecret, oauthVerifier, accessToken, noteStoreUrl, webApiUrlPrefix, tokenExpires, user_id, created', 'safe', 'on' => 'search'),
 		);
 	}
 
@@ -62,6 +63,7 @@ abstract class BaseEvernoteAuthorization extends CActiveRecord
 			'webApiUrlPrefix' => Yii::t('app', 'Web Api Url Prefix'),
 			'tokenExpires' => Yii::t('app', 'Token Expires'),
 			'user_id' => Yii::t('app', 'User'),
+			'created' => Yii::t('app', 'Created'),
 		);
 	}
 
@@ -78,6 +80,7 @@ abstract class BaseEvernoteAuthorization extends CActiveRecord
 		$criteria->compare('t.webApiUrlPrefix', $this->webApiUrlPrefix, true);
 		$criteria->compare('t.tokenExpires', $this->tokenExpires, true);
 		$criteria->compare('t.user_id', $this->user_id);
+		$criteria->compare('t.created', $this->created, true);
 
 		return new CActiveDataProvider(get_class($this), array(
 			    'criteria' => $criteria,
@@ -87,7 +90,6 @@ abstract class BaseEvernoteAuthorization extends CActiveRecord
 	public function get_label()
 	{
 		return '#' . $this->id;
-		return '#' . $this->user_id;
 	}
 
 }
