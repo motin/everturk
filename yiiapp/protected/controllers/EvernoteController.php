@@ -29,7 +29,7 @@ class EvernoteController extends Controller
 				{
 					if (getTokenCredentials())
 					{
-						$notebooks = $return = listNotebooks();
+						$return = listNotebooks();
 
 						// If we have a proper authentication, we store it
 						if ($return)
@@ -52,7 +52,7 @@ class EvernoteController extends Controller
 						}
 
 						// Create initial notebooks and stacks that the service expects
-						$this->ensureStructure($notebooks);
+						$user->updateStructure($return);
 					} else
 					{
 						//var_dump(__LINE__);
@@ -83,56 +83,6 @@ class EvernoteController extends Controller
 		//var_dump(__LINE__, $return, $lastError, $GLOBALS['lastError'], $currentStatus);
 
 		$this->render('connect', compact("return", "lastError", "currentStatus"));
-	}
-
-	private function ensureStructure($existingNotebooks)
-	{
-
-		$templates = array(
-			'Do as I say',
-			'Summarize this web clip',
-			'Translate this into french',
-			'Translate this into german',
-		);
-
-		$pending_notebooks = array();
-		foreach ($templates as $template)
-			$pending_notebooks[] = $template . " (Pending)";
-
-		$result_notebooks = array();
-		foreach ($templates as $template)
-			$result_notebooks[] = $template . " (Results)";
-
-		$notebookStructure = array(
-			'Everturk Input' => $templates,
-			'Everturk Pending' => $pending_notebooks,
-			'Everturk Results' => $result_notebooks,
-		);
-
-		//var_dump($existingNotebooks);
-
-		foreach ($notebookStructure as $stack => $names)
-		{
-
-			foreach ($names as $name)
-			{
-				$exists = false;
-
-				foreach ($existingNotebooks as $en)
-				{
-					if ($en->name == $name && $en->stack == $stack)
-					{
-						$exists = true;
-						break;
-					}
-				}
-				if (!$exists)
-				{
-					$notebook = createNotebookByNameAndStack($name, $stack);
-					//var_dump($notebook);
-				}
-			}
-		}
 	}
 
 }
