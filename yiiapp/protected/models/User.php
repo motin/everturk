@@ -12,7 +12,7 @@ class User extends BaseUser
 		'notebooks' => array(
 			'input' => array(),
 			'pending' => array(),
-			'result' => array(),
+			'results' => array(),
 		),
 		'template_notebook' => null,
 		'templates' => array(),
@@ -112,66 +112,74 @@ class User extends BaseUser
 		}
 
 		$this->structure['template_notebook'] = $notebook;
-		
-		// Create template notes if they do not exist
-		$notes = findNotesByNotebookGuidOrderedByCreated($notebook->guid, $offset=0, $maxNotes=100);
-		var_dump(__LINE__, $notes);
-		
-		//
-		// Refresh list of existing notebooks
-		// TODO
-		//
-		// Create input and result notebooks based on the templates
-		// TODO
-		//
-		// Hard-coded template
-		$templates = array(
-			'Do as I say',
-			'Summarize this web clip',
-			'Translate this into french',
-			'Translate this into german',
-		);
 
+		// Get template notes
+		$notes = findNotesByNotebookGuidOrderedByCreated($notebook->guid, $offset = 0, $maxNotes = 100);
+		$this->structure['templates'] = $notes->notes;
+
+		// Create default template note if no templates exists
+		if ($notes->totalNotes == 0)
+		{
+
+			// Create default template note
+			// TODO
+			//
+			// Refresh list of existing notebooks
+			// TODO
+
+			throw new Exception("TODO");
+		}
+
+		// Create input, pending and result notebooks based on the template notes
+		$input_notebooks = array();
 		$pending_notebooks = array();
-		foreach ($templates as $template)
-			$pending_notebooks[] = $template . " (Pending)";
-
 		$result_notebooks = array();
-		foreach ($templates as $template)
-			$result_notebooks[] = $template . " (Results)";
+
+		foreach ($this->structure['templates'] as $template)
+		{
+			$input_notebooks[] = $template->title;
+			$pending_notebooks[] = $template->title . " (Pending)";
+			$result_notebooks[] = $template->title . " (Results)";
+		}
 
 		$notebookStructure = array(
-			'Everturk Input' => $templates,
-			'Everturk Pending' => $pending_notebooks,
-			'Everturk Results' => $result_notebooks,
+			'input' => $input_notebooks,
+			'pending' => $pending_notebooks,
+			'results' => $result_notebooks,
 		);
-
-		//var_dump($existingNotebooks);
 
 		foreach ($notebookStructure as $stack => $names)
 		{
 
+			// Friendly names
+			if ($stack == 'input')
+				$stackName = 'Everturk Input';
+			if ($stack == 'pending')
+				$stackName = 'Everturk Pending';
+			if ($stack == 'results')
+				$stackName = 'Everturk Results';
+
 			foreach ($names as $name)
 			{
+				$notebook = null;
 				$exists = false;
 
 				foreach ($existingNotebooks as $en)
 				{
-					if ($en->name == $name && $en->stack == $stack)
+					if ($en->name == $name && $en->stack == $stackName)
 					{
 						$exists = true;
+						$notebook = $en;
 						break;
 					}
 				}
 				if (!$exists)
 				{
-					$notebook = createNotebookByNameAndStack($name, $stack);
-					//var_dump($notebook);
+					$notebook = createNotebookByNameAndStack($name, $stackName);
 				}
+				$this->structure['notebooks'][$stack][] = $en;
 			}
 		}
-
-		$this->structure = array(1, 2, 4, 5, 6, 7, 8);
 	}
 
 	public function submitNotes()
