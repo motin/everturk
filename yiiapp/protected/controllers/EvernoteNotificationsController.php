@@ -16,7 +16,7 @@ class EvernoteNotificationsController extends Controller
 	{
 		return array(
 			array('allow',
-				'actions' => array('index', 'view'),
+				'actions' => array('index', 'view', 'receive'),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -54,6 +54,16 @@ class EvernoteNotificationsController extends Controller
 			$this->breadcrumbs[$this->module->Id] = array('/' . $this->module->Id);
 		}
 		return true;
+	}
+
+	public function actionReceive($secret, $userId, $guid, $reason)
+	{
+		if ($secret != EVERNOTE_WEBHOOK_SECRET)
+		{
+			throw new CHttpException(401);
+		}
+		echo "OK";
+		var_dump(compact("userId","guid","reason"));
 	}
 
 	public function actionView($id)
