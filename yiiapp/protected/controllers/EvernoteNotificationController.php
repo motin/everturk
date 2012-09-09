@@ -39,7 +39,7 @@ class EvernoteNotificationController extends Controller
 		// map identifcationColumn to id
 		if (!isset($_GET['id']) && isset($_GET['id']))
 		{
-			$model = EvernoteNotifications::model()->find('id = :id', array(
+			$model = EvernoteNotification::model()->find('id = :id', array(
 				':id' => $_GET['id']));
 			if ($model !== null)
 			{
@@ -76,13 +76,13 @@ class EvernoteNotificationController extends Controller
 
 	public function actionCreate()
 	{
-		$model = new EvernoteNotifications;
+		$model = new EvernoteNotification;
 
-		$this->performAjaxValidation($model, 'evernote-notifications-form');
+		$this->performAjaxValidation($model, 'evernote-notification-form');
 
-		if (isset($_POST['EvernoteNotifications']))
+		if (isset($_POST['EvernoteNotification']))
 		{
-			$model->attributes = $_POST['EvernoteNotifications'];
+			$model->attributes = $_POST['EvernoteNotification'];
 
 			try {
 				if ($model->save())
@@ -92,9 +92,9 @@ class EvernoteNotificationController extends Controller
 			} catch (Exception $e) {
 				$model->addError('id', $e->getMessage());
 			}
-		} elseif (isset($_GET['EvernoteNotifications']))
+		} elseif (isset($_GET['EvernoteNotification']))
 		{
-			$model->attributes = $_GET['EvernoteNotifications'];
+			$model->attributes = $_GET['EvernoteNotification'];
 		}
 
 		$this->render('create', array('model' => $model));
@@ -104,11 +104,11 @@ class EvernoteNotificationController extends Controller
 	{
 		$model = $this->loadModel($id);
 
-		$this->performAjaxValidation($model, 'evernote-notifications-form');
+		$this->performAjaxValidation($model, 'evernote-notification-form');
 
-		if (isset($_POST['EvernoteNotifications']))
+		if (isset($_POST['EvernoteNotification']))
 		{
-			$model->attributes = $_POST['EvernoteNotifications'];
+			$model->attributes = $_POST['EvernoteNotification'];
 
 
 			try {
@@ -148,7 +148,7 @@ class EvernoteNotificationController extends Controller
 
 	public function actionIndex()
 	{
-		$dataProvider = new CActiveDataProvider('EvernoteNotifications');
+		$dataProvider = new CActiveDataProvider('EvernoteNotification');
 		$this->render('index', array(
 			'dataProvider' => $dataProvider,
 		));
@@ -156,11 +156,11 @@ class EvernoteNotificationController extends Controller
 
 	public function actionAdmin()
 	{
-		$model = new EvernoteNotifications('search');
+		$model = new EvernoteNotification('search');
 		$model->unsetAttributes();
 
-		if (isset($_GET['EvernoteNotifications']))
-			$model->attributes = $_GET['EvernoteNotifications'];
+		if (isset($_GET['EvernoteNotification']))
+			$model->attributes = $_GET['EvernoteNotification'];
 
 		$this->render('admin', array(
 			'model' => $model,
@@ -169,7 +169,7 @@ class EvernoteNotificationController extends Controller
 
 	public function loadModel($id)
 	{
-		$model = EvernoteNotifications::model()->findByPk($id);
+		$model = EvernoteNotification::model()->findByPk($id);
 		if ($model === null)
 			throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
 		return $model;
@@ -177,7 +177,7 @@ class EvernoteNotificationController extends Controller
 
 	protected function performAjaxValidation($model)
 	{
-		if (isset($_POST['ajax']) && $_POST['ajax'] === 'evernote-notifications-form')
+		if (isset($_POST['ajax']) && $_POST['ajax'] === 'evernote-notification-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
