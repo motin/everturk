@@ -6,7 +6,7 @@
 	url = https://github.com/jackbot/PHP-Mechanical-Turk.git
 [submodule "yiiapp/protected/extensions/evernote-sdk-php"]
 	path = yiiapp/protected/extensions/evernote-sdk-php
-	url = https://github.com/evernote/evernote-sdk-php.git
+	url = https://github.com/motin/evernote-sdk-php.git
 [submodule "yiiapp/protected/extensions/gtc"]
 	path = yiiapp/protected/extensions/gtc
 	url = https://github.com/thyseus/gii-template-collection.git
