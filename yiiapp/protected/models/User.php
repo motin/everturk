@@ -124,8 +124,12 @@ class User extends BaseUser
 			// Create default template note
 			// TODO
 			//
+			// create note
+			// add simple
+			//
 			// Refresh list of existing notebooks
 			// TODO
+			//$existingNotebooks = listNotebooks();
 
 			throw new Exception("TODO");
 		}

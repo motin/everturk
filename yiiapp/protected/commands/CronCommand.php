@@ -3,7 +3,7 @@
 class CronCommand extends AppConsoleCommand
 {
 
-	public function actionCreateAssignmentsFromNotes($pageSize = 5, $currentPage = 1)
+	public function actionCreateAssignmentsFromNotifications($pageSize = 5, $currentPage = 1)
 	{
 
 		$modelRef = "EvernoteNotification";
@@ -19,6 +19,8 @@ class CronCommand extends AppConsoleCommand
 		// Only include certain input results
 		// just for now
 		//$criteria->condition = "id = 3";
+
+		$criteria->condition = "processed IS NULL";
 		//$criteria->addCondition("");
 
 		$model = $modelRef::model();
@@ -37,8 +39,25 @@ class CronCommand extends AppConsoleCommand
 
 				$this->status("$modelRef loaded id: " . $en->id);
 
+				var_dump($en->getAttributes());
+				var_dump($en->user->getAttributes());
+
+				//$user = //User::model()->findByPk($en->user_id);
 				// Perform logic
+				// get user
+				// get notebook
+				// get input note
+				// get pending notebook....
+				// submitnote
+				//
 				// TODO
+
+				// Mark as processed
+				//$en->processed = date('Y-m-d H:i:s', time());
+
+				if (!$en->save())
+					throw new SaveException($en);
+				
 			} catch (ImproperConfigurationException $e) {
 				$this->exceptionStatus($e);
 			} catch (Exception $e) {
@@ -55,6 +74,9 @@ class CronCommand extends AppConsoleCommand
 
 	public function actionCreateNotesFromFinishedAssignments($pageSize = 5, $currentPage = 1)
 	{
+
+		// Include our OAuth functions
+		require_once('protected/extensions/evernote-sdk-php/sample/oauth/functions.php');
 
 		$modelRef = "FinishedAssignments";
 
@@ -87,7 +109,15 @@ class CronCommand extends AppConsoleCommand
 				$this->status("$modelRef loaded id: " . $finishedAssignment->id);
 
 				// Perform logic
-				// TODO
+				// get hitId from mt
+				// get the original note
+				// by saving hitId with the submission?
+				//
+				// include the answer
+				// get answer
+				// get note... updateNote...
+				// move original node to Results
+				//moveNote($note, $toNotebookGuid);
 			} catch (ImproperConfigurationException $e) {
 				$this->exceptionStatus($e);
 			} catch (Exception $e) {
