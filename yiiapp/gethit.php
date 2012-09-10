@@ -41,7 +41,16 @@ foreach ($array as $hit)
 				$response3 = $mturk->GetHIT($Request2);
 				
 				//Create Evernote note here with Q: $response3->HIT->Question and A: $response2->GetAssignmentsForHITResult->Assignment->Answer
-
+				
+				
+				$newNote = new edam_type_Note();
+$newNote->title = $response3->HIT->Question ;
+$enml = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd"><en-note><span style="font-weight:bold;">'.$response2->GetAssignmentsForHITResult->Assignment->Answer.'</span><br /><span>Lovely, hints of chocolate and lavendar.</span></en-note>';
+				
+				$newNote->content = $enml;
+				$serverNote = $noteStore->createNote($authToken, $newNote);
+				
+				
 				echo "Q:" . $response3->HIT->Question;
 				echo "A:" . $response2->GetAssignmentsForHITResult->Assignment->Answer;
 			} else

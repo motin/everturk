@@ -29,4 +29,6 @@ $Request = array(
 
 // invoke CreateHIT
 $CreateHITResponse = $mturk->CreateHIT($Request);
+echo $CreateHITResponse;
+echo "finished";
 ?>
